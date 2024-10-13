@@ -27,10 +27,15 @@ if ($nome_medicamento && $preco_unitario && $quantidade_estoque && $categoria &&
 
 
 <?php
-require 'conexao.php';
+// Arquivo banco.php
+
+// Conexão com o banco de dados
+$dsn = 'mysql:host=localhost;dbname=SistemaFarmacia';
+$username = '';
+$password = '';
 
 try {
-    $pdo = new PDO($dsn, $username, $senha);
+    $pdo = new PDO($dsn, $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo 'Erro ao conectar ao banco de dados: ' . $e->getMessage();
@@ -38,9 +43,9 @@ try {
 }
 
 // Função para cadastrar usuário
-function cadastrarUsuario($username, $senha, $email) {
+function cadastrarUsuario($username, $password, $email) {
     global $pdo;
-    $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $sql = $pdo->prepare("INSERT INTO Usuarios (username, password, email) VALUES (?, ?, ?)");
     $sql->execute([$username, $hashed_password, $email]);
 }
@@ -62,12 +67,12 @@ function emailExiste($email) {
 }
 
 // Função para logar usuário
-function logarUsuario($username, $senha) {
+function logarUsuario($username, $password) {
     global $pdo;
     $sql = $pdo->prepare("SELECT * FROM Usuarios WHERE username = ?");
     $sql->execute([$username]);
     $usuario = $sql->fetch();
-    if ($usuario && password_verify($senha, $usuario['senha'])) {
+    if ($usuario && password_verify($password, $usuario['password'])) {
         return true;
     } else {
         return false;
