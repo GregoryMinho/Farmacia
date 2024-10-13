@@ -21,25 +21,20 @@ if ($nome_medicamento && $preco_unitario && $quantidade_estoque && $categoria &&
         echo "Error: " . $sql->errorInfo()[2];
     }
 } else {
-    echo "NULO";
 }
 ?>
 
 
 <?php
-// Arquivo banco.php
 
-// Conexão com o banco de dados
 $dsn = 'mysql:host=localhost;dbname=SistemaFarmacia';
-$username = '';
-$senha = '';
+$username = 'seu_usuario';
+$senha = 'sua_senha';
 
 try {
     $pdo = new PDO($dsn, $username, $senha);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    echo 'Erro ao conectar ao banco de dados: ' . $e->getMessage();
-    exit();
 }
 
 // Função para cadastrar usuário
@@ -82,5 +77,4 @@ function logarUsuario($username, $senha)
         return false;
     }
 }
-
 ?>
