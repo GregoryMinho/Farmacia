@@ -24,3 +24,54 @@ if ($nome_medicamento && $preco_unitario && $quantidade_estoque && $categoria &&
     echo "NULO";
 }
 ?>
+
+
+<?php
+require 'conexao.php';
+
+try {
+    $pdo = new PDO($dsn, $username, $senha);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo 'Erro ao conectar ao banco de dados: ' . $e->getMessage();
+    exit();
+}
+
+// Função para cadastrar usuário
+function cadastrarUsuario($username, $senha, $email) {
+    global $pdo;
+    $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
+    $sql = $pdo->prepare("INSERT INTO Usuarios (username, password, email) VALUES (?, ?, ?)");
+    $sql->execute([$username, $hashed_password, $email]);
+}
+
+// Função para verificar se o usuário existe
+function usuarioExiste($username) {
+    global $pdo;
+    $sql = $pdo->prepare("SELECT * FROM Usuarios WHERE username = ?");
+    $sql->execute([$username]);
+    return $sql->rowCount() > 0;
+}
+
+// Função para verificar se o email existe
+function emailExiste($email) {
+    global $pdo;
+    $sql = $pdo->prepare("SELECT * FROM Usuarios WHERE email = ?");
+    $sql->execute([$email]);
+    return $sql->rowCount() > 0;
+}
+
+// Função para logar usuário
+function logarUsuario($username, $senha) {
+    global $pdo;
+    $sql = $pdo->prepare("SELECT * FROM Usuarios WHERE username = ?");
+    $sql->execute([$username]);
+    $usuario = $sql->fetch();
+    if ($usuario && password_verify($senha, $usuario['senha'])) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+?>

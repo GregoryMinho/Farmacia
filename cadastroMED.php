@@ -9,6 +9,11 @@
 </head>
 
 <body>
+
+    <?php
+    require 'conexao.php'
+    ?>
+
     <div class="container">
         <h1 class="text-center">Cadastro de Medicamentos</h1>
         <form action="" method="post">
@@ -32,28 +37,27 @@
                 <label for="data_validade">Data de Validade:</label>
                 <input type="date" class="form-control" id="data_validade" name="data_validade">
             </div>
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
+            <button type="submit" class="btn btn-primary" name="Cadastrar">Cadastrar</button>
         </form>
     </div>
+
+    <?php
+    if (isset($_POST['Cadastrar'])) {
+        $nome_medicamento = $_POST['nome_medicamento'];
+        $categoria = $_POST['categoria'];
+        $preco_unitario = $_POST['preco_unitario'];
+        $quantidade_estoque = $_POST['quantidade_estoque'];
+        $data_validade = $_POST['data_validade'];
+
+        $sql = $pdo->prepare("INSERT INTO Medicamentos (nome_medicamento, categoria, preco_unitario, quantidade_estoque, data_validade) VALUES (?, ?, ?, ?, ?)");
+        $sql->execute([$nome_medicamento, $categoria, $preco_unitario, $quantidade_estoque, $data_validade]);
+
+        header("Location: index.php");
+        exit;
+    } else {
+    }
+    ?>
+
 </body>
 
 </html>
-
-<?php
-require 'conexao.php';
-
-if (isset($_POST['nome_medicamento'])) {
-    $nome_medicamento = $_POST['nome_medicamento'];
-    $categoria = $_POST['categoria'];
-    $preco_unitario = $_POST['preco_unitario'];
-    $quantidade_estoque = $_POST['quantidade_estoque'];
-    $data_validade = $_POST['data_validade'];
-
-    $sql = $pdo->prepare("INSERT INTO Medicamentos (nome_medicamento, categoria, preco_unitario, quantidade_estoque, data_validade) VALUES (?, ?, ?, ?, ?)");
-    $sql->execute([$nome_medicamento, $categoria, $preco_unitario, $quantidade_estoque, $data_validade]);
-
-    header("Location: index.php");
-    exit;
-} else {
-}
-?>
