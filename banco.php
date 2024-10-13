@@ -32,10 +32,10 @@ if ($nome_medicamento && $preco_unitario && $quantidade_estoque && $categoria &&
 // Conexão com o banco de dados
 $dsn = 'mysql:host=localhost;dbname=SistemaFarmacia';
 $username = '';
-$password = '';
+$senha = '';
 
 try {
-    $pdo = new PDO($dsn, $username, $password);
+    $pdo = new PDO($dsn, $username, $senha);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo 'Erro ao conectar ao banco de dados: ' . $e->getMessage();
@@ -43,15 +43,17 @@ try {
 }
 
 // Função para cadastrar usuário
-function cadastrarUsuario($username, $password, $email) {
+function cadastrarUsuario($username, $senha, $email)
+{
     global $pdo;
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $sql = $pdo->prepare("INSERT INTO Usuarios (username, password, email) VALUES (?, ?, ?)");
+    $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
+    $sql = $pdo->prepare("INSERT INTO Usuarios (username, senha, email) VALUES (?, ?, ?)");
     $sql->execute([$username, $hashed_password, $email]);
 }
 
 // Função para verificar se o usuário existe
-function usuarioExiste($username) {
+function usuarioExiste($username)
+{
     global $pdo;
     $sql = $pdo->prepare("SELECT * FROM Usuarios WHERE username = ?");
     $sql->execute([$username]);
@@ -59,7 +61,8 @@ function usuarioExiste($username) {
 }
 
 // Função para verificar se o email existe
-function emailExiste($email) {
+function emailExiste($email)
+{
     global $pdo;
     $sql = $pdo->prepare("SELECT * FROM Usuarios WHERE email = ?");
     $sql->execute([$email]);
@@ -67,12 +70,13 @@ function emailExiste($email) {
 }
 
 // Função para logar usuário
-function logarUsuario($username, $password) {
+function logarUsuario($username, $senha)
+{
     global $pdo;
     $sql = $pdo->prepare("SELECT * FROM Usuarios WHERE username = ?");
     $sql->execute([$username]);
     $usuario = $sql->fetch();
-    if ($usuario && password_verify($password, $usuario['password'])) {
+    if ($usuario && password_verify($senha, $usuario['senha'])) {
         return true;
     } else {
         return false;
